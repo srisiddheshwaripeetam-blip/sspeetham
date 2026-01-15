@@ -36,6 +36,7 @@ export default function ParamparaPage() {
       period: t("swami1.period"),
       year: "1916",
       image: "/mouna-swami-portrait-1.jpg",
+      imagePosition: "object-top",
       description: t("swami1.brief"),
       fullDescription: t("swami1.description"),
       birth: t("swami1.birth"),
@@ -48,6 +49,7 @@ export default function ParamparaPage() {
       period: t("swami2.period"),
       year: "1944",
       image: "/vimalananda-bharati-portrait.jpg",
+      imagePosition: "object-top",
       description: t("swami2.brief"),
       fullDescription: t("swami2.description"),
       birth: t("swami2.birth"),
@@ -60,6 +62,7 @@ export default function ParamparaPage() {
       period: t("swami3.period"),
       year: "1950",
       image: "/trivikrama-ramananda-standing.jpg",
+      imagePosition: "object-top",
       description: t("swami3.brief"),
       fullDescription: t("swami3.description"),
       birth: t("swami3.birth"),
@@ -71,7 +74,8 @@ export default function ParamparaPage() {
       role: t("swami4.title"),
       period: t("swami4.period"),
       year: "1991",
-      image: "/hh-siddheswarananda-bharati-swami.png",
+      image: "/siva-chidananda-standing.jpg",
+      imagePosition: "object-top",
       description: t("swami4.brief"),
       fullDescription: t("swami4.description"),
       birth: t("swami4.birth"),
@@ -83,7 +87,8 @@ export default function ParamparaPage() {
       role: t("swami5.title"),
       period: t("swami5.period"),
       year: "2002",
-      image: "/siva-chidananda-final.png",
+      image: "/peethadhipathi-updated.png",
+      imagePosition: "object-top",
       description: t("swami5.brief"),
       fullDescription: t("swami5.description"),
       birth: t("swami5.birth"),
@@ -96,6 +101,7 @@ export default function ParamparaPage() {
       period: t("swami6.period"),
       year: "Next",
       image: "/datteshwarananda-final.jpg",
+      imagePosition: "object-top",
       description: t("swami6.brief"),
       fullDescription: t("swami6.description"),
       birth: t("swami6.birth"),
@@ -160,7 +166,7 @@ export default function ParamparaPage() {
                           src={guru.image}
                           alt={guru.name}
                           fill
-                          className="object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                          className={`object-cover ${guru.imagePosition} transition-transform duration-700 group-hover:scale-110`}
                         />
                         {/* Divine Halo Effect */}
                         <div className="absolute inset-0 rounded-full ring-4 ring-amber-400/30 group-hover:ring-amber-500/60 transition-all duration-500" />

@@ -2,7 +2,8 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, X, ZoomIn, ArrowLeft } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { FadeUp } from "@/components/animate-on-scroll"
 import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
@@ -11,6 +12,8 @@ import { useLanguage } from "@/lib/language-context"
 export default function PeethadhipathiGalleryPage() {
   const { t } = useLanguage()
   const [activeSwamiIndex, setActiveSwamiIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxImageIndex, setLightboxImageIndex] = useState(0)
 
   const peethadhipathis = [
     {
@@ -19,6 +22,7 @@ export default function PeethadhipathiGalleryPage() {
       title: t("swami1.title"),
       period: t("swami1.period"),
       image: "/mouna-swami-portrait-1.jpg",
+      imagePosition: "object-top",
       gallery: [
         "/mouna-swami-portrait-1.jpg",
         "/mouna-swami-tapas.jpg",
@@ -42,6 +46,7 @@ export default function PeethadhipathiGalleryPage() {
       title: t("swami2.title"),
       period: t("swami2.period"),
       image: "/vimalananda-bharati-portrait.jpg",
+      imagePosition: "object-top",
       gallery: ["/vimalananda-bharati-portrait.jpg", "/vimalananda-bharati-statue.jpg"],
       description: t("swami2.long_description"),
       contributions: [
@@ -57,6 +62,7 @@ export default function PeethadhipathiGalleryPage() {
       title: t("swami3.title"),
       period: t("swami3.period"),
       image: "/trivikrama-ramananda-standing.jpg",
+      imagePosition: "object-top",
       gallery: ["/trivikrama-ramananda-standing.jpg", "/trivikrama-ramananda-puja.jpg", "/trivikrama-ramananda-official.jpg"],
       description: t("swami3.long_description"),
       contributions: [
@@ -71,9 +77,10 @@ export default function PeethadhipathiGalleryPage() {
       name: t("swami4.name"),
       title: t("swami4.title"),
       period: t("swami4.period"),
-      image: "/hh-siddheswarananda-bharati-swami.png",
+      image: "/siva-chidananda-standing.jpg",
+      imagePosition: "object-top",
       gallery: [
-        "/hh-siddheswarananda-bharati-swami.png",
+        "/siva-chidananda-standing.jpg",
         "/siva-chidananda-seated.jpg",
       ],
       description: t("swami4.long_description"),
@@ -90,9 +97,10 @@ export default function PeethadhipathiGalleryPage() {
       name: t("swami5.name"),
       title: t("swami5.title"),
       period: t("swami5.period"),
-      image: "/siva-chidananda-final.png",
+      image: "/peethadhipathi-updated.png",
+      imagePosition: "object-top",
       gallery: [
-        "/siva-chidananda-final.png",
+        "/peethadhipathi-updated.png",
         "/siddheswarananda-blessing.png",
         "/siddheswarananda-seated.png",
         "/siddheswarananda-garland.jpg",
@@ -114,6 +122,7 @@ export default function PeethadhipathiGalleryPage() {
       title: t("swami6.title"),
       period: t("swami6.period"),
       image: "/datteshwarananda-final.jpg",
+      imagePosition: "object-top",
       gallery: ["/datteshwarananda-final.jpg", "/datteshwarananda-standing.jpg", "/datteshwarananda-blessing.jpg", "/datteshwarananda-throne.jpg"],
       description: t("swami6.long_description"),
       contributions: [
@@ -139,246 +148,320 @@ export default function PeethadhipathiGalleryPage() {
     setCurrentImageIndex(0)
   }
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % activeSwami.gallery.length)
+  const openLightbox = (imageIndex: number) => {
+    setLightboxImageIndex(imageIndex)
+    setLightboxOpen(true)
   }
 
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + activeSwami.gallery.length) % activeSwami.gallery.length)
+  const closeLightbox = () => {
+    setLightboxOpen(false)
+  }
+
+  const nextLightboxImage = () => {
+    setLightboxImageIndex((prev) => (prev + 1) % activeSwami.gallery.length)
+  }
+
+  const prevLightboxImage = () => {
+    setLightboxImageIndex((prev) => (prev - 1 + activeSwami.gallery.length) % activeSwami.gallery.length)
   }
 
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen bg-stone-50 pt-24 pb-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeUp>
-            <div className="text-center mb-16 relative">
-              {/* Decorative background element behind title */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-amber-200/20 blur-3xl rounded-full pointer-events-none" />
+      <main className="min-h-screen bg-neutral-950">
+        {/* Hero Section with Full-width Image */}
+        <div className="relative h-[60vh] md:h-[70vh] overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeSwami.id}
+              initial={{ opacity: 0, scale: 1.1 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.7 }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={activeSwami.image}
+                alt={activeSwami.name}
+                fill
+                className={`object-cover ${activeSwami.imagePosition}`}
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/80 via-transparent to-neutral-950/80" />
+            </motion.div>
+          </AnimatePresence>
 
-              <h1 className="font-serif text-5xl sm:text-6xl font-bold text-amber-900 mb-6 drop-shadow-sm relative z-10">
-                {t("gallery.title")}
-              </h1>
-              <div className="flex items-center justify-center gap-4 mb-8">
-                <div className="h-px w-24 bg-gradient-to-r from-transparent to-amber-400" />
-                <div className="w-3 h-3 rotate-45 border-2 border-amber-600 bg-amber-50" />
-                <div className="h-px w-24 bg-gradient-to-l from-transparent to-amber-400" />
-              </div>
-              <p className="max-w-3xl mx-auto text-xl text-neutral-700 italic leading-relaxed font-serif">
-                {t("gallery.description")}
-              </p>
-              <p className="mt-6 font-serif text-2xl text-amber-800 font-medium tracking-wide">
-                {t("gallery.verse")}
-              </p>
+          {/* Hero Content */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 lg:p-16">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                key={activeSwami.id + "-text"}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <p className="text-amber-400 font-medium tracking-widest uppercase text-sm mb-3">
+                  {activeSwami.period === "Successor" ? "Successor Designate" : activeSwami.period}
+                </p>
+                <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-white font-bold mb-4 leading-tight">
+                  {activeSwami.name}
+                </h1>
+                <p className="text-amber-200/80 text-lg md:text-xl font-light max-w-xl">
+                  {activeSwami.title}
+                </p>
+              </motion.div>
             </div>
-          </FadeUp>
+          </div>
 
-          <div className="grid lg:grid-cols-12 gap-10 items-start">
-            {/* Left Column: Navigation List */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="bg-white rounded-2xl shadow-[0_10px_30px_rgba(120,53,15,0.1)] overflow-hidden border border-amber-100/50 relative">
-                <div className="absolute inset-0 bg-[url('/pattern-light.png')] opacity-5" />
-                <div className="p-6 bg-gradient-to-r from-amber-900 to-amber-800 text-white relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-2xl -mr-16 -mt-16" />
-                  <h3 className="font-serif text-2xl font-bold text-center relative z-10 tracking-wide">
-                    {t("parampara.title")}
-                  </h3>
+          {/* Navigation Arrows */}
+          <div className="absolute top-1/2 -translate-y-1/2 left-4 md:left-8 z-20">
+            <button
+              onClick={prevSwami}
+              className="p-3 md:p-4 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all backdrop-blur-md border border-white/20 hover:border-amber-400 shadow-lg group"
+              aria-label="Previous Swami"
+            >
+              <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
+            </button>
+          </div>
+          <div className="absolute top-1/2 -translate-y-1/2 right-4 md:right-8 z-20">
+            <button
+              onClick={nextSwami}
+              className="p-3 md:p-4 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all backdrop-blur-md border border-white/20 hover:border-amber-400 shadow-lg group"
+              aria-label="Next Swami"
+            >
+              <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
+            </button>
+          </div>
+
+          {/* Swami Selector Dots */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+            {peethadhipathis.map((swami, idx) => (
+              <button
+                key={swami.id}
+                onClick={() => {
+                  setActiveSwamiIndex(idx)
+                  setCurrentImageIndex(0)
+                }}
+                className={`h-2 rounded-full transition-all duration-300 ${idx === activeSwamiIndex
+                    ? "w-8 bg-amber-400"
+                    : "w-2 bg-white/40 hover:bg-white/70"
+                  }`}
+                aria-label={`View ${swami.name}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="bg-stone-50 relative">
+          {/* Decorative Wave */}
+          <div className="absolute -top-16 left-0 right-0 h-16 bg-gradient-to-b from-transparent to-stone-50" />
+
+          <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 md:py-24">
+            <FadeUp key={activeSwami.id}>
+              {/* Story Section */}
+              <section className="mb-16 md:mb-24">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-px bg-amber-400" />
+                  <h2 className="font-serif text-2xl md:text-3xl text-amber-900 font-bold">The Story</h2>
                 </div>
-                <div className="divide-y divide-amber-100/50">
+                <div className="prose prose-lg prose-amber max-w-none">
+                  <p className="text-xl md:text-2xl leading-relaxed text-neutral-700 font-serif whitespace-pre-line first-letter:text-6xl first-letter:font-bold first-letter:text-amber-900 first-letter:mr-3 first-letter:float-left first-letter:leading-none">
+                    {activeSwami.description}
+                  </p>
+                </div>
+              </section>
+
+              {/* Photo Gallery Grid */}
+              <section className="mb-16 md:mb-24">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-px bg-amber-400" />
+                  <h2 className="font-serif text-2xl md:text-3xl text-amber-900 font-bold">{t("gallery.photo_gallery")}</h2>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                  {activeSwami.gallery.map((photo, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.1 }}
+                      className={`relative overflow-hidden rounded-xl cursor-pointer group ${idx === 0 ? "col-span-2 row-span-2 aspect-square" : "aspect-[4/5]"
+                        }`}
+                      onClick={() => openLightbox(idx)}
+                    >
+                      <Image
+                        src={photo}
+                        alt={`${activeSwami.name} - Photo ${idx + 1}`}
+                        fill
+                        className="object-cover object-top transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="p-3 bg-white/20 rounded-full backdrop-blur-sm">
+                          <ZoomIn className="w-6 h-6 text-white" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="text-white text-sm font-medium">View Photo</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Divine Contributions */}
+              <section className="mb-16 md:mb-24">
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-px bg-amber-400" />
+                  <h2 className="font-serif text-2xl md:text-3xl text-amber-900 font-bold">{t("gallery.contributions")}</h2>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {activeSwami.contributions.map((contribution, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.08 }}
+                      className="flex gap-4 items-start p-5 bg-white rounded-xl shadow-sm border border-amber-100/50 hover:shadow-lg hover:border-amber-200 transition-all duration-300 group"
+                    >
+                      <span className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-amber-100 to-amber-50 text-amber-800 flex items-center justify-center text-sm font-bold border border-amber-200 group-hover:from-amber-500 group-hover:to-amber-600 group-hover:text-white group-hover:border-amber-500 transition-all duration-300">
+                        {idx + 1}
+                      </span>
+                      <span className="text-neutral-700 text-lg leading-relaxed font-medium pt-1.5">{contribution}</span>
+                    </motion.div>
+                  ))}
+                </div>
+              </section>
+
+              {/* Swami Selector Cards */}
+              <section>
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-px bg-amber-400" />
+                  <h2 className="font-serif text-2xl md:text-3xl text-amber-900 font-bold">{t("parampara.title")}</h2>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
                   {peethadhipathis.map((swami, idx) => (
                     <button
                       key={swami.id}
                       onClick={() => {
                         setActiveSwamiIndex(idx)
                         setCurrentImageIndex(0)
-                        window.scrollTo({ top: 200, behavior: 'smooth' })
+                        window.scrollTo({ top: 0, behavior: 'smooth' })
                       }}
-                      className={`w-full text-left p-5 transition-all duration-300 flex items-center gap-5 hover:bg-amber-50 group relative overflow-hidden ${idx === activeSwamiIndex
-                        ? "bg-amber-50"
-                        : ""
+                      className={`group relative overflow-hidden rounded-xl transition-all duration-300 ${idx === activeSwamiIndex
+                          ? "ring-4 ring-amber-400 ring-offset-2"
+                          : "hover:ring-2 hover:ring-amber-200"
                         }`}
                     >
-                      {/* Active Indicator Line */}
-                      <div className={`absolute left-0 top-0 bottom-0 w-1.5 transition-colors duration-300 ${idx === activeSwamiIndex ? "bg-amber-600" : "bg-transparent group-hover:bg-amber-200"}`} />
-
-                      <div className={`relative w-16 h-16 rounded-full overflow-hidden flex-shrink-0 border-2 shadow-sm transition-all duration-300 ${idx === activeSwamiIndex ? "border-amber-600 ring-4 ring-amber-100" : "border-amber-200 group-hover:border-amber-400"}`}>
+                      <div className="aspect-[3/4] relative">
                         <Image
                           src={swami.image}
                           alt={swami.name}
                           fill
-                          className="object-cover object-top"
+                          className={`object-cover ${swami.imagePosition} transition-transform duration-500 group-hover:scale-110`}
                         />
+                        <div className={`absolute inset-0 transition-colors duration-300 ${idx === activeSwamiIndex
+                            ? "bg-amber-600/20"
+                            : "bg-black/30 group-hover:bg-black/10"
+                          }`} />
                       </div>
-                      <div className="relative z-10">
-                        <h4 className={`font-serif text-lg font-bold leading-tight mb-1 transition-colors ${idx === activeSwamiIndex ? "text-amber-900" : "text-neutral-700 group-hover:text-amber-800"}`}>
+                      <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                        <p className="text-white text-xs md:text-sm font-semibold leading-tight line-clamp-2">
                           {swami.name}
-                        </h4>
-                        <p className={`text-xs uppercase tracking-wider font-medium ${idx === activeSwamiIndex ? "text-amber-700" : "text-neutral-500"}`}>
-                          {swami.period === "Successor" ? "Successor Designate" : swami.period}
                         </p>
                       </div>
+                      {idx === activeSwamiIndex && (
+                        <div className="absolute top-2 right-2 w-3 h-3 bg-amber-400 rounded-full animate-pulse" />
+                      )}
                     </button>
                   ))}
                 </div>
-              </div>
+              </section>
+            </FadeUp>
 
-              <div className="hidden lg:block bg-gradient-to-br from-amber-50 to-white p-8 rounded-2xl border border-amber-100 text-center shadow-lg relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200" />
-                <p className="text-amber-900 italic font-serif text-lg leading-relaxed relative z-10">
-                  "{t("gallery.quote")}"
-                </p>
-                <div className="mt-4 text-amber-400 text-4xl opacity-30 font-serif">❝</div>
-              </div>
-            </div>
-
-            {/* Right Column: Main Content */}
-            <div className="lg:col-span-8">
-              <div className="bg-white rounded-3xl shadow-[0_20px_50px_rgba(120,53,15,0.15)] overflow-hidden border border-amber-100 relative min-h-[800px]">
-                {/* Header Section */}
-                <div className="relative h-64 md:h-80 bg-neutral-900 overflow-hidden group">
-                  {/* Background Image - Blured version of Swami's image */}
-                  <Image
-                    src={activeSwami.image}
-                    alt=""
-                    fill
-                    className="object-cover opacity-30 blur-xl scale-110 group-hover:scale-105 transition-transform duration-1000"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-                  {/* Content Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-8 md:p-10 flex flex-col md:flex-row items-end md:items-center gap-6 z-20">
-                    {/* Main Portrait */}
-                    <div className="relative w-32 h-40 md:w-40 md:h-52 rounded-xl overflow-hidden border-4 border-white shadow-2xl flex-shrink-0 -mb-16 md:mb-0 md:-mt-24 transform transition-transform hover:scale-105 duration-500">
-                      <Image
-                        src={activeSwami.image}
-                        alt={activeSwami.name}
-                        fill
-                        className="object-cover object-top"
-                        priority
-                      />
-                    </div>
-
-                    <div className="flex-grow text-white mb-2 md:mb-4">
-                      <h2 className="font-serif text-2xl md:text-4xl lg:text-5xl font-bold leading-tight drop-shadow-lg mb-2">
-                        {activeSwami.name}
-                      </h2>
-                      <div className="flex flex-wrap gap-3 items-center text-sm md:text-base text-amber-200 font-medium tracking-wide">
-                        <span className="bg-amber-950/50 px-3 py-1 rounded-full border border-amber-500/30 backdrop-blur-sm">{activeSwami.title}</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                        <span>{activeSwami.period === "Successor" ? "Successor Designate" : activeSwami.period}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Navigation Arrows (Top Right) */}
-                  <div className="absolute right-6 top-6 flex gap-3 z-30">
-                    <button
-                      onClick={prevSwami}
-                      className="p-3 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all backdrop-blur-md border border-white/20 hover:border-amber-400 shadow-lg group/nav"
-                      aria-label="Previous Swami"
-                    >
-                      <ChevronLeft className="w-6 h-6 group-hover/nav:-translate-x-0.5 transition-transform" />
-                    </button>
-                    <button
-                      onClick={nextSwami}
-                      className="p-3 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all backdrop-blur-md border border-white/20 hover:border-amber-400 shadow-lg group/nav"
-                      aria-label="Next Swami"
-                    >
-                      <ChevronRight className="w-6 h-6 group-hover/nav:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
+            {/* Back to Parampara */}
+            <div className="mt-16 text-center">
+              <Link
+                href="/parampara"
+                className="inline-flex items-center gap-3 text-amber-800 hover:text-amber-600 font-medium text-lg transition-colors group"
+              >
+                <div className="w-10 h-10 rounded-full border-2 border-amber-200 flex items-center justify-center group-hover:border-amber-500 group-hover:bg-amber-50 transition-all">
+                  <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
                 </div>
-
-                <div className="pt-24 px-8 pb-10 md:px-12 md:pb-12">
-                  <FadeUp key={activeSwami.id}>
-                    <div className="grid gap-12">
-                      <div className="prose prose-lg prose-amber max-w-none">
-                        <p className="text-xl leading-relaxed text-neutral-700 whitespace-pre-line font-serif drop-shadow-sm first-letter:text-5xl first-letter:font-bold first-letter:text-amber-900 first-letter:mr-3 first-letter:float-left">
-                          {activeSwami.description}
-                        </p>
-                      </div>
-
-                      {/* Photo Gallery with Slider */}
-                      {activeSwami.gallery.length > 0 && (
-                        <div className="bg-neutral-50 rounded-2xl p-8 border border-neutral-200 shadow-inner relative overflow-hidden">
-                          <div className="absolute top-0 right-0 p-4 opacity-10">
-                            <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor" className="text-amber-900"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" /></svg>
-                          </div>
-                          <h3 className="font-serif text-2xl font-bold text-amber-900 mb-6 flex items-center gap-3 relative z-10">
-                            <span className="w-8 h-px bg-amber-400"></span>
-                            {t("gallery.photo_gallery")}
-                          </h3>
-                          <div className="relative aspect-[16/10] w-full max-w-3xl mx-auto rounded-xl overflow-hidden shadow-2xl bg-black group border-4 border-white/50 ring-1 ring-neutral-200">
-                            <Image
-                              src={activeSwami.gallery[currentImageIndex]}
-                              alt={`${activeSwami.name} - Image ${currentImageIndex + 1}`}
-                              fill
-                              className="object-contain"
-                            />
-                            {activeSwami.gallery.length > 1 && (
-                              <>
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-amber-600 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm border border-white/10"
-                                >
-                                  <ChevronLeft className="w-6 h-6" />
-                                </button>
-                                <button
-                                  onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/40 hover:bg-amber-600 text-white rounded-full transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm border border-white/10"
-                                >
-                                  <ChevronRight className="w-6 h-6" />
-                                </button>
-                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 p-2 bg-black/30 rounded-full backdrop-blur-md border border-white/10">
-                                  {activeSwami.gallery.map((_, idx) => (
-                                    <button
-                                      key={idx}
-                                      onClick={() => setCurrentImageIndex(idx)}
-                                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? "bg-amber-400 w-6" : "bg-white/50 hover:bg-white"}`}
-                                    />
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Divine Contributions */}
-                      <div className="bg-gradient-to-br from-amber-50 to-orange-50/30 rounded-2xl p-8 border border-amber-100 shadow-sm relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-amber-200/30 to-transparent rounded-bl-full -mr-10 -mt-10" />
-                        <h3 className="font-serif text-2xl font-bold text-amber-900 mb-6 flex items-center gap-3 relative z-10">
-                          <span className="w-8 h-px bg-amber-400"></span>
-                          {t("gallery.contributions")}
-                        </h3>
-                        <ul className="grid gap-4 relative z-10">
-                          {activeSwami.contributions.map((contribution, idx) => (
-                            <li key={idx} className="flex gap-4 items-start p-4 bg-white rounded-xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-amber-100/50 hover:border-amber-200 transition-colors group/item">
-                              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center text-sm font-bold mt-0.5 border border-amber-200 group-hover/item:bg-amber-600 group-hover/item:text-white transition-colors">
-                                {idx + 1}
-                              </span>
-                              <span className="text-neutral-700 text-lg leading-snug font-medium group-hover/item:text-amber-900 transition-colors">{contribution}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </FadeUp>
-                </div>
-              </div>
+                {t("gallery.back")}
+              </Link>
             </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <Link href="/parampara" className="inline-flex items-center gap-3 text-amber-800 hover:text-amber-600 font-serif font-bold text-lg transition-colors group">
-              <div className="w-10 h-10 rounded-full border-2 border-amber-200 flex items-center justify-center group-hover:border-amber-600 transition-colors">
-                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
-              </div>
-              {t("gallery.back")}
-            </Link>
           </div>
         </div>
+
+        {/* Lightbox */}
+        <AnimatePresence>
+          {lightboxOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+              onClick={closeLightbox}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeLightbox}
+                className="absolute top-6 right-6 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-all z-10"
+                aria-label="Close lightbox"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Navigation */}
+              {activeSwami.gallery.length > 1 && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); prevLightboxImage(); }}
+                    className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all z-10"
+                    aria-label="Previous image"
+                  >
+                    <ChevronLeft className="w-8 h-8" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); nextLightboxImage(); }}
+                    className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 bg-white/10 hover:bg-amber-500 text-white rounded-full transition-all z-10"
+                    aria-label="Next image"
+                  >
+                    <ChevronRight className="w-8 h-8" />
+                  </button>
+                </>
+              )}
+
+              {/* Image */}
+              <motion.div
+                key={lightboxImageIndex}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                className="relative w-full h-full max-w-5xl max-h-[85vh] mx-4"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Image
+                  src={activeSwami.gallery[lightboxImageIndex]}
+                  alt={`${activeSwami.name} - Full size`}
+                  fill
+                  className="object-contain"
+                />
+              </motion.div>
+
+              {/* Image Counter */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+                {lightboxImageIndex + 1} / {activeSwami.gallery.length}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
       <SiteFooter />
     </>
