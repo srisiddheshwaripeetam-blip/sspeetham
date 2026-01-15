@@ -90,7 +90,7 @@ export default function DonatePage() {
             <div className="bg-white rounded-xl shadow-lg border border-amber-100 overflow-hidden hover:shadow-xl hover:scale-105 transition-all duration-300 group">
               <div className="relative overflow-hidden">
                 <Image
-                  src="/temple-maintenance-peetham.jpg"
+                  src="/images/temple-maintenance.jpg"
                   alt="Temple Maintenance and Upkeep"
                   width={400}
                   height={200}

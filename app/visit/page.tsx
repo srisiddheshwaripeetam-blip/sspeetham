@@ -57,25 +57,26 @@ export default function VisitPage() {
         <section className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <FadeUp>
             <Card className="h-full overflow-hidden hover:shadow-md transition-shadow">
-              <a href="https://maps.app.goo.gl/jn4UqAgf1wSLwKyw6" target="_blank" rel="noopener noreferrer">
-                <div className="h-32 w-full overflow-hidden border-b">
-                  <Image
-                    src="/how-to-reach-courtallam-roads-and-buses.jpg"
-                    alt="How to reach Sri Siddheswari Peetham in Courtallam"
-                    width={400}
-                    height={200}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    How to Reach <span className="text-xs font-normal text-amber-600">(Open Map)</span>
-                  </CardTitle>
-                </CardHeader>
-              </a>
+              <div className="h-32 w-full overflow-hidden border-b">
+                <Image
+                  src="/images/how-to-reach.jpg"
+                  alt="How to reach Sri Siddheswari Peetham in Courtallam"
+                  width={400}
+                  height={200}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <CardTitle className="text-lg">How to Reach</CardTitle>
+              </CardHeader>
               <CardContent className="text-sm text-neutral-700">
                 Frequent buses from Tenkasi/Tirunelveli. Taxis available from nearby railheads. Roads remain motorable
                 during monsoon. Check local advisories.
+                <div className="mt-3">
+                  <a href="https://maps.app.goo.gl/jn4UqAgf1wSLwKyw6" target="_blank" rel="noopener noreferrer" className="text-amber-700 underline underline-offset-4 hover:text-amber-800">
+                    See Map
+                  </a>
+                </div>
               </CardContent>
             </Card>
           </FadeUp>
