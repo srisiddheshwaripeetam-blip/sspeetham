@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, X, ZoomIn, ArrowLeft } from "lucide-react"
@@ -29,6 +29,12 @@ export default function PeethadhipathiGalleryPage() {
         "/mouna-swami-tapas.jpg",
         "/mouna-swami-seated.jpg",
         "/mouna-swami-procession.jpg",
+        "/mounaswami/027c04c0-9f7a-4cff-b9a0-0feb5ca994a5.jpg",
+        "/mounaswami/38b3e8b3-df35-4701-9cbc-087ccdb232e1.jpg",
+        "/mounaswami/8b550ed6-17cd-4024-9ad7-a51bc40e537f.jpg",
+        "/mounaswami/8c79684b-8279-4321-8049-dc358ece56e2.jpg",
+        "/mounaswami.png",
+        "/portait%20hero.png",
       ],
       description: t("swami1.long_description"),
       contributions: [
@@ -48,7 +54,13 @@ export default function PeethadhipathiGalleryPage() {
       period: t("swami2.period"),
       image: "/vimalananda-bharati-portrait.jpg",
       imagePosition: "object-top",
-      gallery: ["/vimalananda-bharati-portrait.jpg", "/vimalananda-bharati-statue.jpg"],
+      gallery: [
+        "/vimalananda-bharati-portrait.jpg",
+        "/vimalananda-bharati-statue.jpg",
+        "/vimalananda/81dbe0ff-e0ab-4187-bec8-21abc1c89799.jpg",
+        "/vimalananda/b1fbcf01-904c-4d8e-b304-9e3fddcae8a7.jpg",
+        "/vimalananda.jpg",
+      ],
       description: t("swami2.long_description"),
       contributions: [
         t("swami2.contribution1"),
@@ -64,7 +76,12 @@ export default function PeethadhipathiGalleryPage() {
       period: t("swami3.period"),
       image: "/trivikrama-ramananda-standing.jpg",
       imagePosition: "object-top",
-      gallery: ["/trivikrama-ramananda-standing.jpg", "/trivikrama-ramananda-puja.jpg", "/trivikrama-ramananda-official.jpg"],
+      gallery: [
+        "/trivikrama-ramananda-standing.jpg",
+        "/trivikrama-ramananda-puja.jpg",
+        "/trivikrama-ramananda-official.jpg",
+        "/trivikramananda.jpg",
+      ],
       description: t("swami3.long_description"),
       contributions: [
         t("swami3.contribution1"),
@@ -83,6 +100,9 @@ export default function PeethadhipathiGalleryPage() {
       gallery: [
         "/siva-chidananda-standing.jpg",
         "/siva-chidananda-seated.jpg",
+        "/sivachidananda/WhatsApp Image 2025-11-04 at 12.21.34.jpeg",
+        "/sivachidananda/ce286934-2601-429a-8d59-102582f7d6fd.jpg",
+        "/siva-chidananda-bharati.png",
       ],
       description: t("swami4.long_description"),
       contributions: [
@@ -105,7 +125,17 @@ export default function PeethadhipathiGalleryPage() {
         "/siddheswarananda-blessing.png",
         "/siddheswarananda-seated.png",
         "/siddheswarananda-garland.jpg",
-        "/siddheswarananda-bharati-portrait.png"
+        "/siddheswarananda-bharati-portrait.png",
+        "/Siddheswarananda Bharati/59390105_1111951392330542_196927441682300928_n.jpg",
+        "/Siddheswarananda Bharati/ATI RUDRAM (5).avif",
+        "/Siddheswarananda Bharati/Peethadipati.png",
+        "/Siddheswarananda Bharati/swami ji.png",
+        "/siddheswarananda-bharati-current.jpg",
+        "/siddheswarananda-bharati-official.jpg",
+        "/swami%20pooja.png",
+        "/swamiji-performing-nithya-seva.jpg",
+        "/swamiji-pooja-exact.png",
+        "/swamiji-seated-final.png",
       ],
       description: t("swami5.long_description"),
       contributions: [
@@ -124,7 +154,15 @@ export default function PeethadhipathiGalleryPage() {
       period: t("swami6.period"),
       image: "/datteshwarananda-final.jpg",
       imagePosition: "object-top",
-      gallery: ["/datteshwarananda-final.jpg", "/datteshwarananda-standing.jpg", "/datteshwarananda-blessing.jpg", "/datteshwarananda-throne.jpg"],
+      gallery: [
+        "/datteshwarananda-final.jpg",
+        "/datteshwarananda-standing.jpg",
+        "/datteshwarananda-blessing.jpg",
+        "/datteshwarananda-throne.jpg",
+        "/dattaswami-2.jpg",
+        "/dattaswami-3.jpg",
+        "/dattaswami-4.jpg",
+      ],
       description: t("swami6.long_description"),
       contributions: [
         t("swami6.contribution1"),
@@ -138,6 +176,29 @@ export default function PeethadhipathiGalleryPage() {
 
   const activeSwami = peethadhipathis[activeSwamiIndex]
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [activeHtmlDescription, setActiveHtmlDescription] = useState("")
+  const [isLoadingDescription, setIsLoadingDescription] = useState(false)
+  const { language } = useLanguage()
+
+  // Fetch the pre-formatted HTML biographies for optimal performance
+  useEffect(() => {
+    const fetchBiographies = async () => {
+      setIsLoadingDescription(true)
+      try {
+        const response = await fetch(`/content/biographies_${language}.json`)
+        if (response.ok) {
+          const data = await response.json()
+          setActiveHtmlDescription(data[`swami${activeSwamiIndex + 1}`] || "")
+        }
+      } catch (error) {
+        console.error("Error fetching biographies:", error)
+      } finally {
+        setIsLoadingDescription(false)
+      }
+    }
+
+    fetchBiographies()
+  }, [activeSwamiIndex, language])
 
   const nextSwami = () => {
     setActiveSwamiIndex((prev) => (prev + 1) % peethadhipathis.length)
@@ -211,9 +272,20 @@ export default function PeethadhipathiGalleryPage() {
                       {activeSwami.title}
                     </p>
 
-                    <p className="text-stone-300 text-base md:text-lg font-light leading-relaxed max-w-xl mx-auto lg:mx-0 tracking-wide line-clamp-3 mb-8">
-                      {activeSwami.description}
-                    </p>
+                    <div className="min-h-[100px] mb-8">
+                      {isLoadingDescription ? (
+                        <div className="space-y-2 animate-pulse">
+                          <div className="h-4 bg-white/10 rounded w-full" />
+                          <div className="h-4 bg-white/10 rounded w-5/6" />
+                          <div className="h-4 bg-white/10 rounded w-4/6" />
+                        </div>
+                      ) : (
+                        <div
+                          className="text-stone-300 text-sm md:text-base font-light leading-relaxed max-w-xl mx-auto lg:mx-0 tracking-wide line-clamp-3 opacity-80"
+                          dangerouslySetInnerHTML={{ __html: activeHtmlDescription.replace(/<[^>]*>?/gm, ' ') }}
+                        />
+                      )}
+                    </div>
 
                     <button
                       onClick={() => {
@@ -328,10 +400,20 @@ export default function PeethadhipathiGalleryPage() {
                 </div>
                 <div className="prose prose-lg prose-amber max-w-none">
                   <div className="prose prose-lg prose-amber max-w-none">
-                    <RichTextRenderer
-                      content={activeSwami.description}
-                      className="text-lg md:text-xl text-neutral-700 font-serif"
-                    />
+                    {isLoadingDescription ? (
+                      <div className="space-y-4 animate-pulse pt-4">
+                        <div className="h-6 bg-neutral-200 rounded w-full" />
+                        <div className="h-6 bg-neutral-200 rounded w-full" />
+                        <div className="h-6 bg-neutral-200 rounded w-11/12" />
+                        <div className="h-6 bg-neutral-200 rounded w-full" />
+                        <div className="h-6 bg-neutral-200 rounded w-4/5" />
+                      </div>
+                    ) : (
+                      <div
+                        className="text-lg md:text-xl text-neutral-700 font-serif"
+                        dangerouslySetInnerHTML={{ __html: activeHtmlDescription }}
+                      />
+                    )}
                   </div>
                 </div>
               </section>

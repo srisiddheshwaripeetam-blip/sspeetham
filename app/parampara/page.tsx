@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion"
 import { ChevronDown, ChevronRight, ChevronUp, ArrowRight } from "lucide-react"
 import Link from "next/link"
@@ -23,6 +23,25 @@ export default function ParamparaPage() {
   })
 
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
+
+  const [biographies, setBiographies] = useState<Record<string, string>>({})
+  const { language } = useLanguage()
+
+  // Pre-load all biographies for the timeline
+  useEffect(() => {
+    const fetchBiographies = async () => {
+      try {
+        const response = await fetch(`/content/biographies_${language}.json`)
+        if (response.ok) {
+          const data = await response.json()
+          setBiographies(data)
+        }
+      } catch (error) {
+        console.error("Error fetching biographies:", error)
+      }
+    }
+    fetchBiographies()
+  }, [language])
 
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
@@ -224,11 +243,20 @@ export default function ParamparaPage() {
                                 className="overflow-hidden"
                               >
                                 <div className="pt-4 border-t border-gray-100 text-sm text-gray-600 space-y-3">
-                                  <div className="italic bg-amber-50/50 p-3 rounded-lg border border-amber-100/50 leading-relaxed text-justify">
+                                  <div className="italic bg-amber-50/50 p-3 rounded-lg border border-amber-100/50 leading-relaxed text-justify min-h-[50px]">
                                     <span className="font-semibold text-amber-900 block mb-2">{t("parampara.read_full_history")}:</span>
-                                    {guru.fullDescription.split('\n').filter(line => line.trim()).map((line, i) => (
-                                      <p key={i} className="mb-4 last:mb-0 min-h-[1em]">{line}</p>
-                                    ))}
+                                    {!biographies[`swami${guru.id}`] ? (
+                                      <div className="space-y-2 animate-pulse">
+                                        <div className="h-3 bg-amber-200/40 rounded w-full" />
+                                        <div className="h-3 bg-amber-200/40 rounded w-5/6" />
+                                        <div className="h-3 bg-amber-200/40 rounded w-4/6" />
+                                      </div>
+                                    ) : (
+                                      <div
+                                        className="space-y-4"
+                                        dangerouslySetInnerHTML={{ __html: biographies[`swami${guru.id}`] }}
+                                      />
+                                    )}
                                   </div>
                                   <div className="text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1">
                                     <span><strong>{t("parampara.born")}:</strong> {guru.birth}</span>
