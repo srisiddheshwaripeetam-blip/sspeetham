@@ -10,6 +10,17 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 import { FadeUp } from "@/components/animate-on-scroll"
 import { useLanguage } from "@/lib/language-context"
+import bioEn from "@/lib/data/biographies_en.json"
+import bioHi from "@/lib/data/biographies_hi.json"
+import bioTa from "@/lib/data/biographies_ta.json"
+import bioTe from "@/lib/data/biographies_te.json"
+
+const biographyData: Record<string, Record<string, string>> = {
+  en: bioEn,
+  hi: bioHi,
+  ta: bioTa,
+  te: bioTe,
+}
 
 export default function ParamparaPage() {
   const { t } = useLanguage()
@@ -24,24 +35,8 @@ export default function ParamparaPage() {
 
   const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"])
 
-  const [biographies, setBiographies] = useState<Record<string, string>>({})
   const { language } = useLanguage()
-
-  // Pre-load all biographies for the timeline
-  useEffect(() => {
-    const fetchBiographies = async () => {
-      try {
-        const response = await fetch(`/content/biographies_${language}.json`)
-        if (response.ok) {
-          const data = await response.json()
-          setBiographies(data)
-        }
-      } catch (error) {
-        console.error("Error fetching biographies:", error)
-      }
-    }
-    fetchBiographies()
-  }, [language])
+  const biographies = biographyData[language] || {}
 
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
@@ -245,18 +240,10 @@ export default function ParamparaPage() {
                                 <div className="pt-4 border-t border-gray-100 text-sm text-gray-600 space-y-3">
                                   <div className="italic bg-amber-50/50 p-3 rounded-lg border border-amber-100/50 leading-relaxed text-justify min-h-[50px]">
                                     <span className="font-semibold text-amber-900 block mb-2">{t("parampara.read_full_history")}:</span>
-                                    {!biographies[`swami${guru.id}`] ? (
-                                      <div className="space-y-2 animate-pulse">
-                                        <div className="h-3 bg-amber-200/40 rounded w-full" />
-                                        <div className="h-3 bg-amber-200/40 rounded w-5/6" />
-                                        <div className="h-3 bg-amber-200/40 rounded w-4/6" />
-                                      </div>
-                                    ) : (
-                                      <div
-                                        className="space-y-4"
-                                        dangerouslySetInnerHTML={{ __html: biographies[`swami${guru.id}`] }}
-                                      />
-                                    )}
+                                    <div
+                                      className="space-y-4"
+                                      dangerouslySetInnerHTML={{ __html: biographies[`swami${guru.id}`] }}
+                                    />
                                   </div>
                                   <div className="text-xs text-gray-500 flex flex-wrap gap-x-4 gap-y-1">
                                     <span><strong>{t("parampara.born")}:</strong> {guru.birth}</span>

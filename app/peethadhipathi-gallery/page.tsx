@@ -9,6 +9,17 @@ import SiteHeader from "@/components/site-header"
 import SiteFooter from "@/components/site-footer"
 import { useLanguage } from "@/lib/language-context"
 import { RichTextRenderer } from "@/components/rich-text-renderer"
+import bioEn from "@/lib/data/biographies_en.json"
+import bioHi from "@/lib/data/biographies_hi.json"
+import bioTa from "@/lib/data/biographies_ta.json"
+import bioTe from "@/lib/data/biographies_te.json"
+
+const biographyData: Record<string, Record<string, string>> = {
+  en: bioEn,
+  hi: bioHi,
+  ta: bioTa,
+  te: bioTe,
+}
 
 export default function PeethadhipathiGalleryPage() {
   const { t } = useLanguage()
@@ -176,29 +187,10 @@ export default function PeethadhipathiGalleryPage() {
 
   const activeSwami = peethadhipathis[activeSwamiIndex]
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [activeHtmlDescription, setActiveHtmlDescription] = useState("")
-  const [isLoadingDescription, setIsLoadingDescription] = useState(false)
   const { language } = useLanguage()
 
-  // Fetch the pre-formatted HTML biographies for optimal performance
-  useEffect(() => {
-    const fetchBiographies = async () => {
-      setIsLoadingDescription(true)
-      try {
-        const response = await fetch(`/content/biographies_${language}.json`)
-        if (response.ok) {
-          const data = await response.json()
-          setActiveHtmlDescription(data[`swami${activeSwamiIndex + 1}`] || "")
-        }
-      } catch (error) {
-        console.error("Error fetching biographies:", error)
-      } finally {
-        setIsLoadingDescription(false)
-      }
-    }
+  const activeHtmlDescription = biographyData[language]?.[`swami${activeSwamiIndex + 1}`] || ""
 
-    fetchBiographies()
-  }, [activeSwamiIndex, language])
 
   const nextSwami = () => {
     setActiveSwamiIndex((prev) => (prev + 1) % peethadhipathis.length)
@@ -273,18 +265,10 @@ export default function PeethadhipathiGalleryPage() {
                     </p>
 
                     <div className="min-h-[100px] mb-8">
-                      {isLoadingDescription ? (
-                        <div className="space-y-2 animate-pulse">
-                          <div className="h-4 bg-white/10 rounded w-full" />
-                          <div className="h-4 bg-white/10 rounded w-5/6" />
-                          <div className="h-4 bg-white/10 rounded w-4/6" />
-                        </div>
-                      ) : (
-                        <div
-                          className="text-stone-300 text-sm md:text-base font-light leading-relaxed max-w-xl mx-auto lg:mx-0 tracking-wide line-clamp-3 opacity-80"
-                          dangerouslySetInnerHTML={{ __html: activeHtmlDescription.replace(/<[^>]*>?/gm, ' ') }}
-                        />
-                      )}
+                      <div
+                        className="text-stone-300 text-sm md:text-base font-light leading-relaxed max-w-xl mx-auto lg:mx-0 tracking-wide line-clamp-3 opacity-80"
+                        dangerouslySetInnerHTML={{ __html: activeHtmlDescription.replace(/<[^>]*>?/gm, ' ') }}
+                      />
                     </div>
 
                     <button
@@ -400,20 +384,10 @@ export default function PeethadhipathiGalleryPage() {
                 </div>
                 <div className="prose prose-lg prose-amber max-w-none">
                   <div className="prose prose-lg prose-amber max-w-none">
-                    {isLoadingDescription ? (
-                      <div className="space-y-4 animate-pulse pt-4">
-                        <div className="h-6 bg-neutral-200 rounded w-full" />
-                        <div className="h-6 bg-neutral-200 rounded w-full" />
-                        <div className="h-6 bg-neutral-200 rounded w-11/12" />
-                        <div className="h-6 bg-neutral-200 rounded w-full" />
-                        <div className="h-6 bg-neutral-200 rounded w-4/5" />
-                      </div>
-                    ) : (
-                      <div
-                        className="text-lg md:text-xl text-neutral-700 font-serif"
-                        dangerouslySetInnerHTML={{ __html: activeHtmlDescription }}
-                      />
-                    )}
+                    <div
+                      className="text-lg md:text-xl text-neutral-700 font-serif"
+                      dangerouslySetInnerHTML={{ __html: activeHtmlDescription }}
+                    />
                   </div>
                 </div>
               </section>
