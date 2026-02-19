@@ -17,7 +17,6 @@ const navGroupsConfig = [
       { href: "/about", labelKey: "nav.about" },
       { href: "/parampara", labelKey: "nav.parampara" },
       { href: "/peethadhipathi-gallery", labelKey: "nav.gallery" },
-      { href: "/affiliated-temples", labelKey: "nav.affiliated" },
     ],
   },
   {
@@ -25,7 +24,6 @@ const navGroupsConfig = [
     items: [
       { href: "/deities", labelKey: "nav.deities" },
       { href: "/homam", labelKey: "nav.homam" },
-      { href: "/events", labelKey: "nav.events" },
     ],
   },
   { href: "/visit", labelKey: "nav.visit" },

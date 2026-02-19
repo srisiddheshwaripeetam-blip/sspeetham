@@ -90,15 +90,6 @@ export default function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/events"
-                  className="text-amber-100 hover:text-amber-300 transition-all duration-300 hover:translate-x-2 inline-flex items-center gap-2 group"
-                >
-                  <span className="text-amber-500 group-hover:text-amber-300 transition-colors"><ChevronRight className="w-4 h-4" /></span>
-                  {t("nav.events")}
-                </Link>
-              </li>
-              <li>
-                <Link
                   href="/visit"
                   className="text-amber-100 hover:text-amber-300 transition-all duration-300 hover:translate-x-2 inline-flex items-center gap-2 group"
                 >

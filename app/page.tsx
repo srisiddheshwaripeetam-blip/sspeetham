@@ -253,16 +253,9 @@ export default function HomePage() {
               {
                 title: t("home.swamiji.title"),
                 copy: t("home.swamiji.description"),
-                img: "/peethadhipathi-updated.png",
+                img: "/Siddheswarananda Bharati/peethadhipathi-updated.png",
                 href: "/about",
                 objectPosition: "object-top",
-              },
-              {
-                title: t("nav.affiliated"),
-                copy: t("home.affiliated.description"),
-                img: "/affiliated-temples-updated.png",
-                href: "/affiliated-temples",
-                objectPosition: "object-center",
               },
             ].map((card, i) => (
               <FadeUp key={card.title} delay={100 * i}>
@@ -310,11 +303,6 @@ export default function HomePage() {
                   title: t("deities.button.bookSeva"),
                   copy: t("home.bookseva.copy"),
                   href: "/sevas/book",
-                },
-                {
-                  title: t("nav.events"),
-                  copy: t("home.calendar.description"),
-                  href: "/events",
                 },
                 {
                   title: t("home.darshan.title"),
