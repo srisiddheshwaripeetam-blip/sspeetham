@@ -36,7 +36,7 @@ export default function AboutPage() {
               <div className="group text-center">
                 <div className="overflow-hidden rounded-xl shadow-lg mb-3 aspect-[4/5]">
                   <Image
-                    src="/mouna-swami-tapas.jpg"
+                    src="/mounaswami/mouna-swami-tapas.jpg"
                     alt="H.H. Sri Mouna Swamy - Founder"
                     width={400}
                     height={500}
@@ -50,7 +50,7 @@ export default function AboutPage() {
               <div className="group text-center">
                 <div className="overflow-hidden rounded-xl shadow-lg mb-3 aspect-[4/5]">
                   <Image
-                    src="/siddheswarananda-bharati-current.jpg"
+                    src="/Siddheswarananda Bharati/siddheswarananda-bharati-current.jpg"
                     alt="H.H. Sri Siddheswarananda Bharati Swamy - Current Peethadhipathi"
                     width={400}
                     height={500}
